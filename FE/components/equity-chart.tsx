@@ -70,7 +70,10 @@ export function EquityChart({
                 day: "numeric",
               })
             }
-            formatter={(value: number) => [value.toFixed(2), "Index"]}
+            formatter={(value) => [
+              Number(value ?? 0).toFixed(2),
+             "Index"
+            ]}
           />
           <Area
             type="monotone"
