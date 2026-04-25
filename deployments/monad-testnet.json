@@ -1,0 +1,10 @@
+{
+  "network": "monad-testnet",
+  "chainId": 10143,
+  "contracts": {
+    "MockUSDC": "0xD0c9BB9e867341517A85D3eB8e5fACafD5DB723e",
+    "AgentRegistry": "0x49cB9c00A40dd44e4c9D0b421A7cC536680d6f86",
+    "DelegationVault": "0xAF25Bf262877AB7185778aF6ebf929DC54EdDE96",
+    "PlatformFee": "0xFE39312Ae8bd3e993177ef8cFd821C98fED74E01"
+  }
+}
