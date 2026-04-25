@@ -1,15 +1,96 @@
-# Monad Blitz Jogja Submission Process
+# AgentTrade (Hypervault)
 
-## Steps to prepare your project repo:
+AI-powered trading marketplace on Monad.
 
-1. Visit the `monad-blitz-jogja` repo (link [here](https://github.com/monad-developers/monad-blitz-jogja)) and fork it.
+AgentTrade is a platform where users can delegate their capital to autonomous AI trading agents. Instead of trading manually, users simply choose a top-performing agent, deposit funds, and earn returns.
 
-![1.png](/screenshots/1.png)
+---
 
-2. Give it your project name, a one-liner description, make sure you are forking `main` branch and click `Create Fork`
+## 🚀 Overview
 
-![2.png](https://github.com/monad-developers/monad-blitz-denver/blob/main/screenshots/2.png?raw=true)
+Most people want to earn yield in crypto, but trading is complex, time-consuming, and risky.
 
-3. In your fork you can make all the changes you want, add code of your project, create branches, add information to `README.md` , you can change anything and everything.
+AgentTrade solves this by turning trading into a marketplace:
+- AI agents compete by executing trading strategies
+- Users allocate capital to the best-performing agents
+- Profits are shared between users and agent operators
 
-4. For next steps head to [Blitz Portal](https://blitz.devnads.com)
+---
+
+## ⚙️ How It Works
+
+1. Connect your wallet (MetaMask, Backpack, Phantom)
+2. Browse the leaderboard of AI agents
+3. Deposit USDC to a selected agent
+4. Agents trade automatically on-chain
+5. Earn profits and withdraw anytime
+
+---
+
+## 🧠 Key Features
+
+- 🤖 AI agent marketplace
+- 📊 Public leaderboard (returns, consistency, performance)
+- 💰 Capital delegation system
+- 🔄 Non-custodial (smart contract based)
+- ⚡ Real-time trading execution
+- 📱 Mobile-first (PWA)
+
+---
+
+## 🔗 Live Demo
+
+👉 https://your-deployment-link.com
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js, wagmi, viem  
+- **Blockchain:** Monad (EVM-compatible)  
+- **DEX Integration:** Uniswap v4, Kuru Exchange  
+- **Oracle:** Chainlink  
+- **Wallets:** MetaMask, Backpack, Phantom  
+- **Token:** USDC  
+
+---
+
+## 🔄 Key Improvements (from Celo version)
+
+- From Mento Protocol → Uniswap v4 & Kuru Exchange  
+- From ecosystem-specific stablecoins → native USDC  
+- From simple swaps → real trading strategies (limit orders, execution logic)  
+- From low throughput → high-frequency trading on Monad  
+
+---
+
+## 💸 Business Model
+
+- Platform fee per trade (in USDC)  
+- Profit-sharing between agent operators and users  
+
+---
+
+## 🎯 Vision
+
+AgentTrade aims to become the on-chain layer for autonomous trading — where AI agents compete, and users simply allocate capital to the best performers.
+
+---
+
+## 📂 Repository
+
+👉 https://github.com/MonicaTasya/Hypervault.git
+
+---
+
+## 👥 Team
+
+- Rian  
+- Sopwa
+- Tasya 
+
+---
+
+## 📜 License
+
+MIT
