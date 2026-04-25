@@ -2,6 +2,9 @@
 
 import * as React from 'react'
 import * as RechartsPrimitive from 'recharts'
+import { type TooltipProps } from "recharts"
+import { type ValueType, type NameType } from "recharts/types/component/DefaultTooltipContent"
+
 
 import { cn } from '@/lib/utils'
 
@@ -125,6 +128,15 @@ function ChartTooltipContent({
     indicator?: 'line' | 'dot' | 'dashed'
     nameKey?: string
     labelKey?: string
+    payload?: Array<{
+      name?: string
+      value?: string | number
+      dataKey?: string | number
+      color?: string
+      payload?: Record<string, unknown>
+      [key: string]: unknown
+    }>
+    label?: string | number
   }) {
   const { config } = useChart()
 
@@ -144,7 +156,7 @@ function ChartTooltipContent({
     if (labelFormatter) {
       return (
         <div className={cn('font-medium', labelClassName)}>
-          {labelFormatter(value, payload)}
+          {labelFormatter(value as string, payload as any)}
         </div>
       )
     }
@@ -182,7 +194,7 @@ function ChartTooltipContent({
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
-          const indicatorColor = color || item.payload.fill || item.color
+          const indicatorColor = color || (item.payload as any)?.fill || item.color
 
           return (
             <div
@@ -193,7 +205,7 @@ function ChartTooltipContent({
               )}
             >
               {formatter && item?.value !== undefined && item.name ? (
-                formatter(item.value, item.name, item, index, item.payload)
+                (formatter as any)(item.value, item.name, item, index, item.payload)
               ) : (
                 <>
                   {itemConfig?.icon ? (
@@ -257,11 +269,17 @@ function ChartLegendContent({
   verticalAlign = 'bottom',
   nameKey,
 }: React.ComponentProps<'div'> &
-  Pick<RechartsPrimitive.LegendProps, 'payload' | 'verticalAlign'> & {
+  Pick<RechartsPrimitive.LegendProps, 'verticalAlign'> & {
     hideIcon?: boolean
     nameKey?: string
+    payload?: Array<{
+      value?: string
+      dataKey?: string | number
+      color?: string
+      [key: string]: unknown
+    }>
   }) {
-  const { config } = useChart()
+  const { config } = useChart()  // ← ini yang hilang
 
   if (!payload?.length) {
     return null
@@ -275,10 +293,9 @@ function ChartLegendContent({
         className,
       )}
     >
-      {payload.map((item) => {
+      {payload.map((item: any) => {
         const key = `${nameKey || item.dataKey || 'value'}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
-
         return (
           <div
             key={item.value}
