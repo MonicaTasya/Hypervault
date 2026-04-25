@@ -27,10 +27,10 @@ import {PlatformFee} from "../src/PlatformFee.sol";
 contract Deploy is Script {
     // ──────────────────────────── Deployment state ───────────────────────────
 
-    MockUSDC      public mockUSDC;
+    MockUSDC public mockUSDC;
     AgentRegistry public agentRegistry;
     DelegationVault public delegationVault;
-    PlatformFee   public platformFee;
+    PlatformFee public platformFee;
 
     // ─────────────────────────────── Entry point ─────────────────────────────
 
@@ -61,11 +61,7 @@ contract Deploy is Script {
         console.log("PlatformFee   :", address(platformFee));
 
         // ── 4. DelegationVault ───────────────────────────────────────────────
-        delegationVault = new DelegationVault(
-            address(mockUSDC),
-            address(agentRegistry),
-            address(platformFee)
-        );
+        delegationVault = new DelegationVault(address(mockUSDC), address(agentRegistry), address(platformFee));
         console.log("DelegationVault:", address(delegationVault));
 
         // ── 5. Wire up cross-contract references ─────────────────────────────
@@ -89,7 +85,7 @@ contract Deploy is Script {
         console.log('    "MockUSDC":        "%s",', address(mockUSDC));
         console.log('    "AgentRegistry":   "%s",', address(agentRegistry));
         console.log('    "DelegationVault": "%s",', address(delegationVault));
-        console.log('    "PlatformFee":     "%s"',  address(platformFee));
+        console.log('    "PlatformFee":     "%s"', address(platformFee));
         console.log("  }");
         console.log("}");
 
@@ -100,16 +96,24 @@ contract Deploy is Script {
     /// @notice Writes a JSON deployment artifact to `deployments/monad-testnet.json`.
     function _writeDeploymentJson() internal {
         string memory json = string.concat(
-            '{\n',
+            "{\n",
             '  "network": "monad-testnet",\n',
             '  "chainId": 10143,\n',
             '  "contracts": {\n',
-            '    "MockUSDC": "',        vm.toString(address(mockUSDC)),        '",\n',
-            '    "AgentRegistry": "',   vm.toString(address(agentRegistry)),   '",\n',
-            '    "DelegationVault": "', vm.toString(address(delegationVault)), '",\n',
-            '    "PlatformFee": "',     vm.toString(address(platformFee)),     '"\n',
-            '  }\n',
-            '}\n'
+            '    "MockUSDC": "',
+            vm.toString(address(mockUSDC)),
+            '",\n',
+            '    "AgentRegistry": "',
+            vm.toString(address(agentRegistry)),
+            '",\n',
+            '    "DelegationVault": "',
+            vm.toString(address(delegationVault)),
+            '",\n',
+            '    "PlatformFee": "',
+            vm.toString(address(platformFee)),
+            '"\n',
+            "  }\n",
+            "}\n"
         );
 
         // Ensure the output directory exists

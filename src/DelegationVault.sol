@@ -65,11 +65,7 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     /// @param _usdc        USDC token address.
     /// @param _registry    AgentRegistry address.
     /// @param _platformFee PlatformFee address.
-    constructor(
-        address _usdc,
-        address _registry,
-        address _platformFee
-    ) Ownable(msg.sender) {
+    constructor(address _usdc, address _registry, address _platformFee) Ownable(msg.sender) {
         usdc = IERC20(_usdc);
         registry = IAgentRegistry(_registry);
         platformFee = IPlatformFee(_platformFee);
@@ -81,8 +77,9 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     function deposit(uint256 agentId, uint256 amount) external nonReentrant {
         // ── Checks ──────────────────────────────────────────────────────────
         if (amount == 0) revert DelegationVault__ZeroAmount();
-        if (!registry.isAgentActive(agentId))
+        if (!registry.isAgentActive(agentId)) {
             revert DelegationVault__AgentNotActive(agentId);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         AgentPool storage pool = _pools[agentId];
@@ -128,8 +125,9 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
 
         DelegatorPosition storage pos = _positions[agentId][msg.sender];
 
-        if (pos.principal < amount)
+        if (pos.principal < amount) {
             revert DelegationVault__InsufficientBalance(msg.sender, agentId, pos.principal, amount);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         AgentPool storage pool = _pools[agentId];
@@ -179,17 +177,15 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     // ────────────────────────── Profit Distribution ──────────────────────────
 
     /// @inheritdoc IDelegationVault
-    function distributeProfits(uint256 agentId, uint256 amount)
-        external
-        nonReentrant
-    {
+    function distributeProfits(uint256 agentId, uint256 amount) external nonReentrant {
         // ── Checks ──────────────────────────────────────────────────────────
         if (amount == 0) revert DelegationVault__ZeroAmount();
 
         // Only the agent's owner may call distributeProfits.
         IAgentRegistry.AgentInfo memory agentInfo = registry.getAgent(agentId);
-        if (agentInfo.owner != msg.sender)
+        if (agentInfo.owner != msg.sender) {
             revert DelegationVault__NotAgentOwner(msg.sender, agentId);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         AgentPool storage pool = _pools[agentId];
@@ -246,8 +242,9 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     function claimOperatorRewards(uint256 agentId) external nonReentrant {
         // ── Checks ──────────────────────────────────────────────────────────
         IAgentRegistry.AgentInfo memory agentInfo = registry.getAgent(agentId);
-        if (agentInfo.owner != msg.sender)
+        if (agentInfo.owner != msg.sender) {
             revert DelegationVault__NotAgentOwner(msg.sender, agentId);
+        }
 
         AgentPool storage pool = _pools[agentId];
         uint256 amount = pool.operatorRewards;
@@ -265,11 +262,7 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     // ─────────────────────────────── Views ───────────────────────────────────
 
     /// @inheritdoc IDelegationVault
-    function getPosition(uint256 agentId, address user)
-        external
-        view
-        returns (DelegatorPosition memory)
-    {
+    function getPosition(uint256 agentId, address user) external view returns (DelegatorPosition memory) {
         return _positions[agentId][user];
     }
 
@@ -279,11 +272,7 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     }
 
     /// @inheritdoc IDelegationVault
-    function pendingReward(uint256 agentId, address user)
-        external
-        view
-        returns (uint256)
-    {
+    function pendingReward(uint256 agentId, address user) external view returns (uint256) {
         AgentPool storage pool = _pools[agentId];
         DelegatorPosition storage pos = _positions[agentId][user];
         return pos.pendingRewards + _calcPending(pos, pool);
@@ -296,10 +285,7 @@ contract DelegationVault is IDelegationVault, Ownable, ReentrancyGuard {
     /// @param pos   The delegator position to evaluate.
     /// @param pool  The corresponding agent pool.
     /// @return      Newly accrued USDC reward (not yet stored).
-    function _calcPending(
-        DelegatorPosition storage pos,
-        AgentPool storage pool
-    ) internal view returns (uint256) {
+    function _calcPending(DelegatorPosition storage pos, AgentPool storage pool) internal view returns (uint256) {
         // (principal × accRewardPerShare / ACC_PRECISION) − rewardDebt
         return (pos.principal * pool.accRewardPerShare) / ACC_PRECISION - pos.rewardDebt;
     }

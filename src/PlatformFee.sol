@@ -50,8 +50,9 @@ contract PlatformFee is IPlatformFee, Ownable, ReentrancyGuard {
 
     /// @notice Restricts a function to authorised callers only.
     modifier onlyAuthorised() {
-        if (!authorisedCallers[msg.sender])
+        if (!authorisedCallers[msg.sender]) {
             revert PlatformFee__NotAuthorized(msg.sender);
+        }
         _;
     }
 
@@ -103,8 +104,9 @@ contract PlatformFee is IPlatformFee, Ownable, ReentrancyGuard {
     /// @inheritdoc IPlatformFee
     function updateFeePercent(uint256 newFeePercent) external onlyOwner {
         // ── Checks ──────────────────────────────────────────────────────────
-        if (newFeePercent > MAX_FEE_PERCENT)
+        if (newFeePercent > MAX_FEE_PERCENT) {
             revert PlatformFee__FeeTooHigh(newFeePercent, MAX_FEE_PERCENT);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         uint256 old = _feePercent;

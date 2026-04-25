@@ -58,16 +58,18 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     /// @notice Restricts a function to the owner of a specific agent.
     /// @param agentId  Agent whose ownership is checked.
     modifier onlyAgentOwner(uint256 agentId) {
-        if (agents[agentId].owner != msg.sender)
+        if (agents[agentId].owner != msg.sender) {
             revert AgentRegistry__NotAgentOwner(msg.sender, agentId);
+        }
         _;
     }
 
     /// @notice Reverts if the agent does not exist (id == 0 or owner == address(0)).
     /// @param agentId  Agent to validate.
     modifier agentExists(uint256 agentId) {
-        if (agentId == 0 || agents[agentId].owner == address(0))
+        if (agentId == 0 || agents[agentId].owner == address(0)) {
             revert AgentRegistry__AgentNotFound(agentId);
+        }
         _;
     }
 
@@ -101,10 +103,12 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     ) external nonReentrant returns (uint256 agentId) {
         // ── Checks ──────────────────────────────────────────────────────────
         if (bytes(name).length == 0) revert AgentRegistry__EmptyName();
-        if (ownerToAgentId[msg.sender] != 0)
+        if (ownerToAgentId[msg.sender] != 0) {
             revert AgentRegistry__AlreadyRegistered(msg.sender);
-        if (feePercent > MAX_FEE_PERCENT)
+        }
+        if (feePercent > MAX_FEE_PERCENT) {
             revert AgentRegistry__FeeTooHigh(feePercent, MAX_FEE_PERCENT);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         agentId = _nextAgentId++;
@@ -128,11 +132,7 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     }
 
     /// @inheritdoc IAgentRegistry
-    function deactivateAgent(uint256 agentId)
-        external
-        agentExists(agentId)
-        onlyAgentOwner(agentId)
-    {
+    function deactivateAgent(uint256 agentId) external agentExists(agentId) onlyAgentOwner(agentId) {
         // ── Checks ──────────────────────────────────────────────────────────
         // (modifier guards: agentExists + onlyAgentOwner)
         // Guard against redundant writes to save gas.
@@ -145,11 +145,7 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     }
 
     /// @inheritdoc IAgentRegistry
-    function reactivateAgent(uint256 agentId)
-        external
-        agentExists(agentId)
-        onlyAgentOwner(agentId)
-    {
+    function reactivateAgent(uint256 agentId) external agentExists(agentId) onlyAgentOwner(agentId) {
         if (agents[agentId].isActive) return;
 
         agents[agentId].isActive = true;
@@ -158,15 +154,15 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     }
 
     /// @inheritdoc IAgentRegistry
-    function updateAgent(
-        uint256 agentId,
-        string calldata strategy,
-        string calldata tradingThesis,
-        uint256 feePercent
-    ) external agentExists(agentId) onlyAgentOwner(agentId) {
+    function updateAgent(uint256 agentId, string calldata strategy, string calldata tradingThesis, uint256 feePercent)
+        external
+        agentExists(agentId)
+        onlyAgentOwner(agentId)
+    {
         // ── Checks ──────────────────────────────────────────────────────────
-        if (feePercent > MAX_FEE_PERCENT)
+        if (feePercent > MAX_FEE_PERCENT) {
             revert AgentRegistry__FeeTooHigh(feePercent, MAX_FEE_PERCENT);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         AgentInfo storage agent = agents[agentId];
@@ -180,28 +176,26 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     // ─────────────────────────────── Reviews ─────────────────────────────────
 
     /// @inheritdoc IAgentRegistry
-    function submitReview(
-        uint256 agentId,
-        uint8 rating,
-        string calldata comment
-    ) external agentExists(agentId) nonReentrant {
+    function submitReview(uint256 agentId, uint8 rating, string calldata comment)
+        external
+        agentExists(agentId)
+        nonReentrant
+    {
         // ── Checks ──────────────────────────────────────────────────────────
         if (rating < 1 || rating > 5) revert AgentRegistry__RatingOutOfRange(rating);
-        if (!hasDelegated[agentId][msg.sender])
+        if (!hasDelegated[agentId][msg.sender]) {
             revert AgentRegistry__NotEligibleReviewer(msg.sender, agentId);
-        if (hasReviewed[agentId][msg.sender])
+        }
+        if (hasReviewed[agentId][msg.sender]) {
             revert AgentRegistry__AlreadyReviewed(msg.sender, agentId);
+        }
 
         // ── Effects ─────────────────────────────────────────────────────────
         hasReviewed[agentId][msg.sender] = true;
 
         agentReviews[agentId].push(
             AgentReview({
-                reviewer: msg.sender,
-                agentId: agentId,
-                rating: rating,
-                comment: comment,
-                timestamp: block.timestamp
+                reviewer: msg.sender, agentId: agentId, rating: rating, comment: comment, timestamp: block.timestamp
             })
         );
 
@@ -225,11 +219,7 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     // ────────────────────────── Vault callbacks ───────────────────────────────
 
     /// @inheritdoc IAgentRegistry
-    function recordTrade(uint256 agentId)
-        external
-        agentExists(agentId)
-        onlyDelegationVault
-    {
+    function recordTrade(uint256 agentId) external agentExists(agentId) onlyDelegationVault {
         // ── Effects ─────────────────────────────────────────────────────────
         uint256 newCount = agents[agentId].totalTrades + 1;
         agents[agentId].totalTrades = newCount;
@@ -238,11 +228,7 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     }
 
     /// @inheritdoc IAgentRegistry
-    function markAsDelegator(uint256 agentId, address delegator)
-        external
-        agentExists(agentId)
-        onlyDelegationVault
-    {
+    function markAsDelegator(uint256 agentId, address delegator) external agentExists(agentId) onlyDelegationVault {
         // Idempotent — no harm in setting to true multiple times.
         if (!hasDelegated[agentId][delegator]) {
             hasDelegated[agentId][delegator] = true;
@@ -252,22 +238,12 @@ contract AgentRegistry is IAgentRegistry, Ownable, ReentrancyGuard {
     // ─────────────────────────────── Views ───────────────────────────────────
 
     /// @inheritdoc IAgentRegistry
-    function getAgent(uint256 agentId)
-        external
-        view
-        agentExists(agentId)
-        returns (AgentInfo memory info)
-    {
+    function getAgent(uint256 agentId) external view agentExists(agentId) returns (AgentInfo memory info) {
         info = agents[agentId];
     }
 
     /// @inheritdoc IAgentRegistry
-    function getReviews(uint256 agentId)
-        external
-        view
-        agentExists(agentId)
-        returns (AgentReview[] memory)
-    {
+    function getReviews(uint256 agentId) external view agentExists(agentId) returns (AgentReview[] memory) {
         return agentReviews[agentId];
     }
 

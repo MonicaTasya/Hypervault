@@ -12,9 +12,9 @@ interface IAgentRegistry {
         uint256 agentId;
         address owner;
         string name;
-        string strategy;         // Agent's trading strategy description
-        string tradingThesis;    // Public thesis shown on social profile
-        uint256 feePercent;      // Operator fee in basis points (0–2000 = 0%–20%)
+        string strategy; // Agent's trading strategy description
+        string tradingThesis; // Public thesis shown on social profile
+        uint256 feePercent; // Operator fee in basis points (0–2000 = 0%–20%)
         uint256 registeredAt;
         uint256 totalTrades;
         uint256 reputationScore; // Accumulated from reviews + performance
@@ -23,9 +23,9 @@ interface IAgentRegistry {
 
     /// @notice A review submitted by a past delegator for an agent.
     struct AgentReview {
-        address reviewer;   // Must be a past delegator
+        address reviewer; // Must be a past delegator
         uint256 agentId;
-        uint8 rating;       // 1–5 inclusive
+        uint8 rating; // 1–5 inclusive
         string comment;
         uint256 timestamp;
     }
@@ -37,12 +37,7 @@ interface IAgentRegistry {
     /// @param owner     Address that registered the agent.
     /// @param name      Human-readable agent name.
     /// @param feePercent Operator fee in basis points.
-    event AgentRegistered(
-        uint256 indexed agentId,
-        address indexed owner,
-        string name,
-        uint256 feePercent
-    );
+    event AgentRegistered(uint256 indexed agentId, address indexed owner, string name, uint256 feePercent);
 
     /// @notice Emitted when an agent's active status is toggled.
     /// @param agentId  The agent affected.
@@ -105,12 +100,8 @@ interface IAgentRegistry {
     /// @param strategy       New strategy description.
     /// @param tradingThesis  New trading thesis.
     /// @param feePercent     New operator fee in basis points.
-    function updateAgent(
-        uint256 agentId,
-        string calldata strategy,
-        string calldata tradingThesis,
-        uint256 feePercent
-    ) external;
+    function updateAgent(uint256 agentId, string calldata strategy, string calldata tradingThesis, uint256 feePercent)
+        external;
 
     /// @notice Submits a review for an agent. Caller must be a past delegator.
     /// @param agentId  Agent being reviewed.

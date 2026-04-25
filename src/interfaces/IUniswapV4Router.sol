@@ -12,28 +12,28 @@ interface IUniswapV4Router {
     /// @notice Identifies a Uniswap v4 pool by its constituent tokens, fee tier,
     ///         tick spacing, and optional hook contract.
     struct PoolKey {
-        address currency0;    // Lower-address token (or address(0) for native ETH)
-        address currency1;    // Higher-address token
-        uint24 fee;           // Pool fee in hundredths of a bip (e.g. 3000 = 0.30%)
-        int24 tickSpacing;    // Minimum tick granularity
-        address hooks;        // Hook contract address (address(0) if none)
+        address currency0; // Lower-address token (or address(0) for native ETH)
+        address currency1; // Higher-address token
+        uint24 fee; // Pool fee in hundredths of a bip (e.g. 3000 = 0.30%)
+        int24 tickSpacing; // Minimum tick granularity
+        address hooks; // Hook contract address (address(0) if none)
     }
 
     /// @notice Parameters for a single-hop exact-input swap.
     struct ExactInputSingleParams {
         PoolKey poolKey;
-        bool zeroForOne;          // True → swap currency0 for currency1
-        uint128 amountIn;         // Exact amount of tokenIn to spend
+        bool zeroForOne; // True → swap currency0 for currency1
+        uint128 amountIn; // Exact amount of tokenIn to spend
         uint128 amountOutMinimum; // Minimum acceptable output (slippage guard)
         uint160 sqrtPriceLimitX96; // Price limit; 0 = no limit
-        bytes hookData;           // Arbitrary data forwarded to the hook
+        bytes hookData; // Arbitrary data forwarded to the hook
     }
 
     /// @notice Parameters for a multi-hop exact-input swap.
     struct ExactInputParams {
-        bytes path;               // ABI-encoded sequence of (token, fee, tickSpacing, hooks)
-        address recipient;        // Address that receives the output tokens
-        uint256 amountIn;         // Exact input amount
+        bytes path; // ABI-encoded sequence of (token, fee, tickSpacing, hooks)
+        address recipient; // Address that receives the output tokens
+        uint256 amountIn; // Exact input amount
         uint256 amountOutMinimum; // Minimum acceptable cumulative output
     }
 
@@ -41,8 +41,8 @@ interface IUniswapV4Router {
     struct ExactOutputSingleParams {
         PoolKey poolKey;
         bool zeroForOne;
-        uint128 amountOut;        // Exact amount of tokenOut to receive
-        uint128 amountInMaximum;  // Maximum amount of tokenIn to spend
+        uint128 amountOut; // Exact amount of tokenOut to receive
+        uint128 amountInMaximum; // Maximum amount of tokenIn to spend
         uint160 sqrtPriceLimitX96;
         bytes hookData;
     }
@@ -72,31 +72,26 @@ interface IUniswapV4Router {
     /// @param recipient Address that receives the output tokens.
     /// @param deadline  Unix timestamp after which the transaction reverts.
     /// @return amountOut Actual output token amount received.
-    function exactInputSingle(
-        ExactInputSingleParams calldata params,
-        address recipient,
-        uint256 deadline
-    ) external payable returns (uint256 amountOut);
+    function exactInputSingle(ExactInputSingleParams calldata params, address recipient, uint256 deadline)
+        external
+        payable
+        returns (uint256 amountOut);
 
     /// @notice Executes a multi-hop exact-input swap.
     /// @param params   Swap parameters (see ExactInputParams).
     /// @param deadline Unix timestamp after which the transaction reverts.
     /// @return amountOut Actual output token amount received.
-    function exactInput(
-        ExactInputParams calldata params,
-        uint256 deadline
-    ) external payable returns (uint256 amountOut);
+    function exactInput(ExactInputParams calldata params, uint256 deadline) external payable returns (uint256 amountOut);
 
     /// @notice Executes a single-hop exact-output swap.
     /// @param params    Swap parameters (see ExactOutputSingleParams).
     /// @param recipient Address that receives the output tokens.
     /// @param deadline  Unix timestamp after which the transaction reverts.
     /// @return amountIn Actual input token amount consumed.
-    function exactOutputSingle(
-        ExactOutputSingleParams calldata params,
-        address recipient,
-        uint256 deadline
-    ) external payable returns (uint256 amountIn);
+    function exactOutputSingle(ExactOutputSingleParams calldata params, address recipient, uint256 deadline)
+        external
+        payable
+        returns (uint256 amountIn);
 
     /// @notice Returns the address of the Uniswap v4 PoolManager this router wraps.
     /// @return poolManager PoolManager contract address.

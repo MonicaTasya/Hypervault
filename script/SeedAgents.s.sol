@@ -22,7 +22,7 @@ contract SeedAgents is Script {
 
     function run() external {
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
-        address deployer   = vm.addr(deployerKey);
+        address deployer = vm.addr(deployerKey);
         address registryAddr = vm.envAddress("REGISTRY_ADDR");
 
         AgentRegistry registry = AgentRegistry(registryAddr);
@@ -30,9 +30,9 @@ contract SeedAgents is Script {
         // Deterministic operator keys derived from a project-specific salt so
         // reruns are idempotent (same addresses → registerAgent reverts
         // cleanly if already registered).
-        uint256 fxKey    = uint256(keccak256("hypervault:seed:fx:v1"));
+        uint256 fxKey = uint256(keccak256("hypervault:seed:fx:v1"));
         uint256 yieldKey = uint256(keccak256("hypervault:seed:yield:v1"));
-        address fxOp    = vm.addr(fxKey);
+        address fxOp = vm.addr(fxKey);
         address yieldOp = vm.addr(yieldKey);
 
         console.log("=== Hypervault Seed Agents ===");
@@ -75,7 +75,7 @@ contract SeedAgents is Script {
         );
         console.log("Yield agentId:", yieldId);
 
-        require(fxId == 1,    "FX must be agentId 1 (dashboard slot assumption)");
+        require(fxId == 1, "FX must be agentId 1 (dashboard slot assumption)");
         require(yieldId == 2, "Yield must be agentId 2 (dashboard slot assumption)");
 
         console.log("Total agents :", registry.totalAgents());

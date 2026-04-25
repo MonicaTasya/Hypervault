@@ -9,18 +9,18 @@ interface IDelegationVault {
 
     /// @notice Per-delegator position in an agent's pool.
     struct DelegatorPosition {
-        uint256 principal;        // USDC deposited (6-decimal)
-        uint256 rewardDebt;       // Reward debt used for reward accounting
-        uint256 pendingRewards;   // Accumulated unclaimed USDC rewards
-        uint256 depositedAt;      // Timestamp of most recent deposit
+        uint256 principal; // USDC deposited (6-decimal)
+        uint256 rewardDebt; // Reward debt used for reward accounting
+        uint256 pendingRewards; // Accumulated unclaimed USDC rewards
+        uint256 depositedAt; // Timestamp of most recent deposit
     }
 
     /// @notice Aggregate pool state for a single agent.
     struct AgentPool {
-        uint256 totalPrincipal;   // Sum of all delegator principals
+        uint256 totalPrincipal; // Sum of all delegator principals
         uint256 accRewardPerShare; // Accumulated rewards per share, scaled by 1e12
         uint256 totalDistributed; // Lifetime rewards distributed to this pool
-        uint256 operatorRewards;  // Unclaimed operator (agent owner) rewards
+        uint256 operatorRewards; // Unclaimed operator (agent owner) rewards
     }
 
     // ─────────────────────────────── Events ──────────────────────────────────
@@ -45,11 +45,7 @@ interface IDelegationVault {
     /// @param feeAmount   Platform fee charged, in USDC 6-decimal.
     /// @param netAmount   USDC actually sent to `user` (grossAmount - feeAmount).
     event WithdrawnWithFee(
-        uint256 indexed agentId,
-        address indexed user,
-        uint256 grossAmount,
-        uint256 feeAmount,
-        uint256 netAmount
+        uint256 indexed agentId, address indexed user, uint256 grossAmount, uint256 feeAmount, uint256 netAmount
     );
 
     /// @notice Emitted when profits are distributed to a pool.
@@ -58,10 +54,7 @@ interface IDelegationVault {
     /// @param delegatorShare  80% portion sent to delegators.
     /// @param operatorShare   20% portion sent to operator.
     event ProfitsDistributed(
-        uint256 indexed agentId,
-        uint256 totalProfit,
-        uint256 delegatorShare,
-        uint256 operatorShare
+        uint256 indexed agentId, uint256 totalProfit, uint256 delegatorShare, uint256 operatorShare
     );
 
     /// @notice Emitted when a delegator claims accumulated rewards.
@@ -119,10 +112,7 @@ interface IDelegationVault {
     /// @param agentId  Agent pool.
     /// @param user     Delegator address.
     /// @return         DelegatorPosition struct.
-    function getPosition(uint256 agentId, address user)
-        external
-        view
-        returns (DelegatorPosition memory);
+    function getPosition(uint256 agentId, address user) external view returns (DelegatorPosition memory);
 
     /// @notice Returns the aggregate pool state for an agent.
     /// @param agentId  Agent identifier.
